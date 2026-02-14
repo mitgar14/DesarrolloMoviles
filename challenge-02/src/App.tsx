@@ -43,6 +43,7 @@ function App() {
       <h1>Contactos</h1>
       <ContactForm onAdd={addContact} />
       <ContactList contacts={contacts} onDelete={deleteContact} />
+      <img src="./icon-192x192.png" alt="Ícono de la aplicación" />
     </>
   );
 }
