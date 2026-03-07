@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -19,24 +20,26 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-const isAuthenticated = () => !!localStorage.getItem('token');
+const App: React.FC = () => {
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem('token'));
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login">
-          {isAuthenticated() ? <Redirect to="/home" /> : <Login />}
-        </Route>
-        <Route exact path="/home">
-          {isAuthenticated() ? <Home /> : <Redirect to="/login" />}
-        </Route>
-        <Route exact path="/">
-          <Redirect to={isAuthenticated() ? '/home' : '/login'} />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/login">
+            {isAuth ? <Redirect to="/home" /> : <Login onLogin={() => setIsAuth(true)} />}
+          </Route>
+          <Route exact path="/home">
+            {isAuth ? <Home onLogout={() => setIsAuth(false)} /> : <Redirect to="/login" />}
+          </Route>
+          <Route exact path="/">
+            <Redirect to={isAuth ? '/home' : '/login'} />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

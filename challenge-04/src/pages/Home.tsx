@@ -7,14 +7,15 @@ import {
   IonButton,
   IonButtons,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 
-const Home: React.FC = () => {
-  const history = useHistory();
+interface HomeProps {
+  onLogout: () => void;
+}
 
+const Home: React.FC<HomeProps> = ({ onLogout }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
-    history.push('/login');
+    onLogout();
   };
 
   return (

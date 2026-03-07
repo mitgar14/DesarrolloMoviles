@@ -11,10 +11,12 @@ import {
   IonButton,
   IonToast,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 
-const Login: React.FC = () => {
-  const history = useHistory();
+interface LoginProps {
+  onLogin: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showToast, setShowToast] = useState(false);
@@ -22,7 +24,7 @@ const Login: React.FC = () => {
   const handleLogin = () => {
     if (email === 'user@email.com' && password === '12345') {
       localStorage.setItem('token', 'abc123');
-      history.push('/home');
+      onLogin();
     } else {
       setShowToast(true);
     }
