@@ -1,0 +1,17 @@
+.perfil-avatar {
+  margin: 20px auto;
+  width: 100px;
+  height: 100px;
+}
+
+.perfil-iniciales {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0C2340;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
