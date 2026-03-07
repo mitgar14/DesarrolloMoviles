@@ -34,6 +34,7 @@ function PerfilUsuario({ usuario }: { usuario: any }) {
       ) : (
         <div className="avatar-iniciales">{iniciales}</div>
       )}
+      <input type="file" accept="image/*" onChange={handleImage} />
     </div>
   );
 }

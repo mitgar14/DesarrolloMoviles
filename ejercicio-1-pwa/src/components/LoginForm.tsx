@@ -35,7 +35,7 @@ function LoginForm({ onLogin }: { onLogin: (usuario: any) => void }) {
     if (usuarioEncontrado) {
       onLogin(usuarioEncontrado);
     } else {
-      setError("Correo electrónico o contraseña incorrectos");
+      setError("Usuario o contraseña incorrectos");
     }
   };
 

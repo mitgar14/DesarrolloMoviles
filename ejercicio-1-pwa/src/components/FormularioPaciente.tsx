@@ -30,8 +30,8 @@ function FormularioPaciente({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nombre.trim() || !apellido.trim() || !dni.trim() || !telefono.trim()) {
-      setError("Todos los campos son obligatorios");
+    if (!nombre.trim() || !apellido.trim() || !dni.trim()) {
+      setError("Nombre, apellido y DNI son obligatorios");
       return;
     }
 
