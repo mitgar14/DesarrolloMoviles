@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import LoginForm from './components/LoginForm';
+import { useState } from "react";
 
-import './App.css'
+import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
+
+import "./App.css";
 
 function App() {
-
   const [usuario, setUsuario] = useState(() => {
-    const usuarioGuardado = localStorage.getItem("medicare_sesion")
+    const usuarioGuardado = localStorage.getItem("medicare_sesion");
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
 
@@ -26,11 +27,13 @@ function App() {
         <LoginForm onLogin={login} />
       ) : (
         <div className="app-container">
-          <p>Dashboard (usuario: {usuario.nombre}) <button onClick={logout}>Logout</button></p>
+          <p>
+            <Dashboard usuario={usuario} onLogout={logout} />
+          </p>
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
