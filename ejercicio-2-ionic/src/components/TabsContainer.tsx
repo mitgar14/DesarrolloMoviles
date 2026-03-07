@@ -1,13 +1,27 @@
-import { IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel, IonBadge } from '@ionic/react';
-import { Route, Redirect } from 'react-router-dom';
-import { listOutline, peopleOutline, personOutline } from 'ionicons/icons';
+import {
+  IonTabs,
+  IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonBadge,
+} from "@ionic/react";
+import { Route, Redirect } from "react-router-dom";
+import { listOutline, peopleOutline, personOutline } from "ionicons/icons";
 
-import VisitasPage from '../pages/VisitasPage';
-import DetalleVisitaPage from '../pages/DetalleVisitaPage';
-import MisPacientesPage from '../pages/MisPacientesPage';
-import PerfilMedicoPage from '../pages/PerfilMedicoPage';
+import VisitasPage from "../pages/VisitasPage";
+import DetalleVisitaPage from "../pages/DetalleVisitaPage";
+import MisPacientesPage from "../pages/MisPacientesPage";
+import PerfilMedicoPage from "../pages/PerfilMedicoPage";
 
-function TabsContainer({ usuario, visitas, actualizarVisitas, pendientes, onLogout }: {
+function TabsContainer({
+  usuario,
+  visitas,
+  actualizarVisitas,
+  pendientes,
+  onLogout,
+}: {
   usuario: any;
   visitas: any[];
   actualizarVisitas: (v: any[]) => void;
@@ -18,10 +32,16 @@ function TabsContainer({ usuario, visitas, actualizarVisitas, pendientes, onLogo
     <IonTabs>
       <IonRouterOutlet>
         <Route exact path="/visitas">
-          <VisitasPage visitas={visitas} actualizarVisitas={actualizarVisitas} />
+          <VisitasPage
+            visitas={visitas}
+            actualizarVisitas={actualizarVisitas}
+          />
         </Route>
         <Route exact path="/visitas/:id">
-          <DetalleVisitaPage visitas={visitas} actualizarVisitas={actualizarVisitas} />
+          <DetalleVisitaPage
+            visitas={visitas}
+            actualizarVisitas={actualizarVisitas}
+          />
         </Route>
         <Route exact path="/pacientes">
           <MisPacientesPage />

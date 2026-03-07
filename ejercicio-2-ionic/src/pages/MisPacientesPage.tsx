@@ -1,7 +1,13 @@
 import {
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
-  IonList, IonItem, IonLabel
-} from '@ionic/react';
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+} from "@ionic/react";
 
 const pacientes = [
   { id: "1", nombre: "Carlos Gómez", dni: "12345678", telefono: "3001234567" },
@@ -20,11 +26,13 @@ function MisPacientesPage() {
       </IonHeader>
       <IonContent>
         <IonList>
-          {pacientes.map(p => (
+          {pacientes.map((p) => (
             <IonItem key={p.id}>
               <IonLabel>
                 <h2>{p.nombre}</h2>
-                <p>DNI: {p.dni} - Tel: {p.telefono}</p>
+                <p>
+                  DNI: {p.dni} - Tel: {p.telefono}
+                </p>
               </IonLabel>
             </IonItem>
           ))}

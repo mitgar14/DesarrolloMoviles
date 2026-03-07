@@ -1,13 +1,27 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
-  IonAvatar, IonImg, IonButton, IonItem, IonLabel
-} from '@ionic/react';
-import './PerfilMedicoPage.css';
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonAvatar,
+  IonImg,
+  IonButton,
+  IonItem,
+  IonLabel,
+} from "@ionic/react";
+import "./PerfilMedicoPage.css";
 
-function PerfilMedicoPage({ usuario, onLogout }: { usuario: any; onLogout: () => void }) {
+function PerfilMedicoPage({
+  usuario,
+  onLogout,
+}: {
+  usuario: any;
+  onLogout: () => void;
+}) {
   const [avatar, setAvatar] = useState(() => {
-    return localStorage.getItem("medicare_avatar_medico") || '';
+    return localStorage.getItem("medicare_avatar_medico") || "";
   });
 
   const handleImagen = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +68,12 @@ function PerfilMedicoPage({ usuario, onLogout }: { usuario: any; onLogout: () =>
           </IonLabel>
         </IonItem>
 
-        <IonButton expand="block" color="danger" onClick={onLogout} className="ion-margin-top">
+        <IonButton
+          expand="block"
+          color="danger"
+          onClick={onLogout}
+          className="ion-margin-top"
+        >
           Cerrar sesión
         </IonButton>
       </IonContent>

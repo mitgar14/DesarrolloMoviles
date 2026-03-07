@@ -1,14 +1,33 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
-  IonList, IonItem, IonLabel, IonBadge, IonSegment, IonSegmentButton,
-  IonItemSliding, IonItemOptions, IonItemOption,
-  IonReorderGroup, IonReorder, IonAlert
-} from '@ionic/react';
-import { useHistory } from 'react-router-dom';
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonBadge,
+  IonSegment,
+  IonSegmentButton,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
+  IonReorderGroup,
+  IonReorder,
+  IonAlert,
+} from "@ionic/react";
+import { useHistory } from "react-router-dom";
 
-function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualizarVisitas: (v: any[]) => void }) {
-  const [filtro, setFiltro] = useState('todas');
+function VisitasPage({
+  visitas,
+  actualizarVisitas,
+}: {
+  visitas: any[];
+  actualizarVisitas: (v: any[]) => void;
+}) {
+  const [filtro, setFiltro] = useState("todas");
   const [visitaACancelar, setVisitaACancelar] = useState<string | null>(null);
   const history = useHistory();
 
@@ -39,12 +58,17 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
     return "danger";
   };
 
-  const visitasFiltradas = filtro === 'todas'
-    ? visitas
-    : visitas.filter((v: any) => v.estado === filtro);
+  const visitasFiltradas =
+    filtro === "todas"
+      ? visitas
+      : visitas.filter((v: any) => v.estado === filtro);
 
-  const pendientes = visitasFiltradas.filter((v: any) => v.estado === "pendiente");
-  const noPendientes = visitasFiltradas.filter((v: any) => v.estado !== "pendiente");
+  const pendientes = visitasFiltradas.filter(
+    (v: any) => v.estado === "pendiente",
+  );
+  const noPendientes = visitasFiltradas.filter(
+    (v: any) => v.estado !== "pendiente",
+  );
 
   return (
     <IonPage>
@@ -53,7 +77,10 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
           <IonTitle>Visitas del día</IonTitle>
         </IonToolbar>
         <IonToolbar>
-          <IonSegment value={filtro} onIonChange={e => setFiltro(e.detail.value as string)}>
+          <IonSegment
+            value={filtro}
+            onIonChange={(e) => setFiltro(e.detail.value as string)}
+          >
             <IonSegmentButton value="todas">Todas</IonSegmentButton>
             <IonSegmentButton value="pendiente">Pendientes</IonSegmentButton>
             <IonSegmentButton value="en_curso">En curso</IonSegmentButton>
@@ -67,7 +94,10 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
             {pendientes.map((visita: any) => (
               <IonItemSliding key={visita.id}>
                 <IonItemOptions side="start">
-                  <IonItemOption color="secondary" onClick={() => history.push(`/visitas/${visita.id}`)}>
+                  <IonItemOption
+                    color="secondary"
+                    onClick={() => history.push(`/visitas/${visita.id}`)}
+                  >
                     Ver detalle
                   </IonItemOption>
                 </IonItemOptions>
@@ -75,17 +105,27 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
                 <IonItem>
                   <IonLabel>
                     <h2>{visita.pacienteNombre}</h2>
-                    <p>{visita.hora} - {visita.direccion}</p>
+                    <p>
+                      {visita.hora} - {visita.direccion}
+                    </p>
                   </IonLabel>
-                  <IonBadge slot="end" color={colorPorEstado(visita.estado)}>{visita.estado}</IonBadge>
+                  <IonBadge slot="end" color={colorPorEstado(visita.estado)}>
+                    {visita.estado}
+                  </IonBadge>
                   <IonReorder slot="end" />
                 </IonItem>
 
                 <IonItemOptions side="end">
-                  <IonItemOption color="primary" onClick={() => cambiarEstado(visita.id, "en_camino")}>
+                  <IonItemOption
+                    color="primary"
+                    onClick={() => cambiarEstado(visita.id, "en_camino")}
+                  >
                     En camino
                   </IonItemOption>
-                  <IonItemOption color="danger" onClick={() => setVisitaACancelar(visita.id)}>
+                  <IonItemOption
+                    color="danger"
+                    onClick={() => setVisitaACancelar(visita.id)}
+                  >
                     Cancelar
                   </IonItemOption>
                 </IonItemOptions>
@@ -96,7 +136,10 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
           {noPendientes.map((visita: any) => (
             <IonItemSliding key={visita.id}>
               <IonItemOptions side="start">
-                <IonItemOption color="secondary" onClick={() => history.push(`/visitas/${visita.id}`)}>
+                <IonItemOption
+                  color="secondary"
+                  onClick={() => history.push(`/visitas/${visita.id}`)}
+                >
                   Ver detalle
                 </IonItemOption>
               </IonItemOptions>
@@ -104,16 +147,26 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
               <IonItem>
                 <IonLabel>
                   <h2>{visita.pacienteNombre}</h2>
-                  <p>{visita.hora} - {visita.direccion}</p>
+                  <p>
+                    {visita.hora} - {visita.direccion}
+                  </p>
                 </IonLabel>
-                <IonBadge slot="end" color={colorPorEstado(visita.estado)}>{visita.estado}</IonBadge>
+                <IonBadge slot="end" color={colorPorEstado(visita.estado)}>
+                  {visita.estado}
+                </IonBadge>
               </IonItem>
 
               <IonItemOptions side="end">
-                <IonItemOption color="primary" onClick={() => cambiarEstado(visita.id, "en_camino")}>
+                <IonItemOption
+                  color="primary"
+                  onClick={() => cambiarEstado(visita.id, "en_camino")}
+                >
                   En camino
                 </IonItemOption>
-                <IonItemOption color="danger" onClick={() => setVisitaACancelar(visita.id)}>
+                <IonItemOption
+                  color="danger"
+                  onClick={() => setVisitaACancelar(visita.id)}
+                >
                   Cancelar
                 </IonItemOption>
               </IonItemOptions>
@@ -129,9 +182,13 @@ function VisitasPage({ visitas, actualizarVisitas }: { visitas: any[]; actualiza
           inputs={[{ name: "motivo", type: "text", placeholder: "Motivo..." }]}
           buttons={[
             { text: "No", role: "cancel" },
-            { text: "Confirmar", handler: (data: any) => {
-              if (visitaACancelar) cambiarEstado(visitaACancelar, "cancelada", data.motivo);
-            }}
+            {
+              text: "Confirmar",
+              handler: (data: any) => {
+                if (visitaACancelar)
+                  cambiarEstado(visitaACancelar, "cancelada", data.motivo);
+              },
+            },
           ]}
         />
       </IonContent>
