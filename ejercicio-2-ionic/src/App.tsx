@@ -57,30 +57,27 @@ const App: React.FC = () => {
 
   const pendientes = visitas.filter((v: any) => v.estado === "pendiente").length;
 
+  const tabsProps = { usuario, visitas, actualizarVisitas, pendientes, onLogout: logout };
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          {!usuario ? (
-            <>
-              <Route path="/login">
-                <LoginPage onLogin={login} />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/login" />
-              </Route>
-            </>
-          ) : (
-            <Route path="/">
-              <TabsContainer
-                usuario={usuario}
-                visitas={visitas}
-                actualizarVisitas={actualizarVisitas}
-                pendientes={pendientes}
-                onLogout={logout}
-              />
-            </Route>
-          )}
+          <Route path="/login">
+            {!usuario ? <LoginPage onLogin={login} /> : <Redirect to="/visitas" />}
+          </Route>
+          <Route path="/visitas">
+            {usuario ? <TabsContainer {...tabsProps} /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/pacientes">
+            {usuario ? <TabsContainer {...tabsProps} /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/perfil">
+            {usuario ? <TabsContainer {...tabsProps} /> : <Redirect to="/login" />}
+          </Route>
+          <Route exact path="/">
+            <Redirect to={usuario ? "/visitas" : "/login"} />
+          </Route>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
