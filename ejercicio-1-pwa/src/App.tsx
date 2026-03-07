@@ -3,13 +3,6 @@ import LoginForm from './components/LoginForm';
 
 import './App.css'
 
-interface Usuario {
-  email: string;
-  password: string;
-  nombre: string;
-  rol: string;
-}
-
 function App() {
 
   const [usuario, setUsuario] = useState<Usuario | null>(() => {

@@ -6,7 +6,14 @@ const usuarios = [
   { email: "doctor@medicare.com", password: "doc123", nombre: "Dr. Martín Ruiz", rol: "medico" }
 ];
 
-function LoginForm({ onLogin }: { onLogin: (usuario: any) => void }) {
+interface Usuario {
+  email: string;
+  password: string;
+  nombre: string;
+  rol: string;
+}
+
+function LoginForm({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
