@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
 
   const handleLogin = () => {
-    if (email === 'user@movilapp.com' && password === '123') {
+    if (email === 'user@email.com' && password === '12345') {
       localStorage.setItem('token', 'abc123');
       history.push('/home');
     } else {
