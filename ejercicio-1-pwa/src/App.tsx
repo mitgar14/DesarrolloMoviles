@@ -5,12 +5,12 @@ import './App.css'
 
 function App() {
 
-  const [usuario, setUsuario] = useState<Usuario | null>(() => {
+  const [usuario, setUsuario] = useState(() => {
     const usuarioGuardado = localStorage.getItem("medicare_sesion")
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
 
-  const login = (usuario: Usuario) => {
+  const login = (usuario: any) => {
     localStorage.setItem("medicare_sesion", JSON.stringify(usuario));
     setUsuario(usuario);
   };
