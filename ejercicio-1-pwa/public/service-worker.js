@@ -2,7 +2,7 @@
 // Para una app médica conviene usar esta solución sobre assets estáticos (JS, CSS, iconos) porque garantiza carga rápida incluso cuando no hay conexión, lo cual es útil en consultorios con red inestable.
 // Los datos de pacientes (que sí tienden a cambiar) usan "network-first" para tener siempre la version mas reciente.
 
-const CACHE_NAME = "medicare-admin-v1";
+const CACHE_NAME = "medicare-admin";
 
 const APP_SHELL = ["/", "/index.html", "/manifest.json"];
 
