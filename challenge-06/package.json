@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@capacitor/network": "^8.0.1",
+    "dexie": "^4.3.0",
+    "dexie-react-hooks": "^4.2.0"
+  }
+}
