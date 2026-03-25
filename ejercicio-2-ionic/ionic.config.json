@@ -1,7 +1,0 @@
-{
-  "name": "ejercicio-2-ionic",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
