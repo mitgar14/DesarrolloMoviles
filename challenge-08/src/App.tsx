@@ -3,12 +3,9 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 import Home from "./pages/Home";
-import GeoPage from "./pages/GeoPage";
-import CameraPage from "./pages/CameraPage";
-import AccelPage from "./pages/AccelPage";
-import DevicePage from "./pages/DevicePage";
-import HapticsPage from "./pages/HapticsPage";
-import FilesystemPage from "./pages/FilesystemPage";
+import MapPage from "./pages/MapPage";
+import HistoryPage from "./pages/HistoryPage";
+import WatermarkPage from "./pages/WatermarkPage";
 
 import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
@@ -30,12 +27,9 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/home" component={Home} />
-        <Route exact path="/geo" component={GeoPage} />
-        <Route exact path="/camera" component={CameraPage} />
-        <Route exact path="/accel" component={AccelPage} />
-        <Route exact path="/device" component={DevicePage} />
-        <Route exact path="/haptics" component={HapticsPage} />
-        <Route exact path="/filesystem" component={FilesystemPage} />
+        <Route exact path="/map" component={MapPage} />
+        <Route exact path="/history" component={HistoryPage} />
+        <Route exact path="/watermark" component={WatermarkPage} />
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
