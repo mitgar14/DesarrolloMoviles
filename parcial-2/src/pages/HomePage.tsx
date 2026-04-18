@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
@@ -22,6 +23,10 @@ import {
   prepararNotificaciones,
 } from "../services/notificaciones";
 import { guardarPuntajeUsuario } from "../services/ranking";
+import { useMissionCamera } from "../hooks/useMissionCamera";
+import { useMissionMovement } from "../hooks/useMissionMovement";
+import { useMotionStillness } from "../hooks/useMotionStillness";
+import "./HomePage.css";
 
 const HomePage: React.FC = () => {
   const history = useHistory();
@@ -29,8 +34,15 @@ const HomePage: React.FC = () => {
   const { puntos, misiones, completarMision, completadas, total, progreso } =
     useMisiones();
 
+  const { photoPath, takeEvidence } = useMissionCamera();
+  const { distance, checkMovement } = useMissionMovement();
+  const { running, waitStillAndVibrate } = useMotionStillness();
+
+  const [estadoM2, setEstadoM2] = useState("Sin iniciar");
+  const [estadoM3, setEstadoM3] = useState("Pendiente");
+
   useEffect(() => {
-    prepararNotificaciones();
+    prepararNotificaciones().catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -50,7 +62,7 @@ const HomePage: React.FC = () => {
     history.replace("/login");
   };
 
-  const handleEjecutarMision = async (id: number) => {
+  const finalizarMision = async (id: number) => {
     const resultado = completarMision(id);
     if (!resultado) return;
 
@@ -69,6 +81,53 @@ const HomePage: React.FC = () => {
         missions: resultado.missions,
         missionsCompleted: resultado.completed,
       });
+    }
+  };
+
+  const handleEjecutarMision = async (id: number) => {
+    if (id === 1) {
+      const path = await takeEvidence();
+      if (!path) return;
+      await finalizarMision(1);
+      return;
+    }
+
+    if (id === 2) {
+      const movement = await checkMovement();
+
+      if (movement.initialized) {
+        setEstadoM2("Posición inicial guardada. Muévete y vuelve a ejecutar.");
+        return;
+      }
+
+      if (movement.detected30 && !movement.completed50) {
+        setEstadoM2(
+          `Movimiento detectado (${movement.distance.toFixed(1)}m). Falta llegar a 50m.`,
+        );
+        return;
+      }
+
+      if (movement.completed50) {
+        setEstadoM2(`Recorrido completado (${movement.distance.toFixed(1)}m).`);
+        await finalizarMision(2);
+        return;
+      }
+
+      setEstadoM2(`Aún no supera 30m (${movement.distance.toFixed(1)}m).`);
+      return;
+    }
+
+    if (id === 3) {
+      setEstadoM3("Midiendo quietud por 10 segundos...");
+      const ok = await waitStillAndVibrate();
+
+      if (!ok) {
+        setEstadoM3("Hubo movimiento. Intenta de nuevo.");
+        return;
+      }
+
+      setEstadoM3("Quietud validada y vibración ejecutada.");
+      await finalizarMision(3);
     }
   };
 
@@ -92,19 +151,24 @@ const HomePage: React.FC = () => {
 
         <IonList className="ion-margin-top">
           {misiones.map((mision) => (
-            <IonItem key={mision.id}>
-              <IonLabel>
-                <h3>{mision.titulo}</h3>
-                <p>{mision.puntos} puntos</p>
+            <IonItem key={mision.id} className="mission-item">
+              <IonLabel className="mission-label">
+                <div className="mission-title">
+                  {mision.titulo || `Misión ${mision.id}`}
+                </div>
+                <div className="mission-points">{mision.puntos} puntos</div>
               </IonLabel>
 
-              <IonBadge color={mision.completada ? "success" : "medium"}>
+              <IonBadge
+                slot="end"
+                color={mision.completada ? "success" : "medium"}
+              >
                 {mision.completada ? "completada" : "pendiente"}
               </IonBadge>
 
               <IonButton
                 slot="end"
-                disabled={mision.completada || !mision.habilitada}
+                disabled={mision.completada || !mision.habilitada || running}
                 onClick={() => handleEjecutarMision(mision.id)}
               >
                 Ejecutar
@@ -112,6 +176,12 @@ const HomePage: React.FC = () => {
             </IonItem>
           ))}
         </IonList>
+
+        {photoPath && <IonImg src={photoPath} />}
+
+        <p>Estado misión 2: {estadoM2}</p>
+        <p>Distancia desde origen: {distance.toFixed(1)}m</p>
+        <p>Estado misión 3: {estadoM3}</p>
 
         <IonButton
           expand="block"
