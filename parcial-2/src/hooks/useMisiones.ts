@@ -79,17 +79,31 @@ export function useMisiones() {
 
   const completarMision = (id: number) => {
     const mision = misiones.find((m) => m.id === id);
-    if (!mision || mision.completada || !mision.habilitada) return;
+    if (!mision || mision.completada || !mision.habilitada) return null;
 
-    setMisiones((prev) =>
-      prev.map((m) => {
-        if (m.id === id) return { ...m, completada: true };
-        if (id === 2 && m.id === 3) return { ...m, habilitada: true };
-        return m;
-      }),
-    );
+    const misionesActualizadas = misiones.map((m) => {
+      if (m.id === id) return { ...m, completada: true };
+      if (id === 2 && m.id === 3) return { ...m, habilitada: true };
+      return m;
+    });
 
-    setPuntos((prev) => prev + mision.puntos);
+    const puntosNuevos = puntos + mision.puntos;
+    const completadasNuevas = misionesActualizadas.filter(
+      (m) => m.completada,
+    ).length;
+
+    setMisiones(misionesActualizadas);
+    setPuntos(puntosNuevos);
+
+    return {
+      points: puntosNuevos,
+      completed: completadasNuevas,
+      total: misionesActualizadas.length,
+      missions: misionesActualizadas.map((m) => ({
+        id: m.id,
+        completed: m.completada,
+      })),
+    };
   };
 
   useEffect(() => {
