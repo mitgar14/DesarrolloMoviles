@@ -26,41 +26,64 @@ export function useMissionMovement() {
   const [distance, setDistance] = useState(0);
 
   const checkMovement = async () => {
-    const permisos = await Geolocation.checkPermissions();
-    if (permisos.location !== "granted") {
+    try {
       await Geolocation.requestPermissions();
-    }
+      const permisos = await Geolocation.checkPermissions();
+      const granted =
+        permisos.location === "granted" ||
+        permisos.coarseLocation === "granted";
 
-    const pos = await Geolocation.getCurrentPosition({
-      enableHighAccuracy: true,
-      timeout: 10000,
-    });
+      if (!granted) {
+        return {
+          distance: origin ? distance : 0,
+          detected30: false,
+          completed50: false,
+          initialized: false,
+          error: "Permiso de ubicación denegado",
+        };
+      }
 
-    const current = {
-      lat: pos.coords.latitude,
-      lng: pos.coords.longitude,
-    };
+      const pos = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+      });
 
-    if (!origin) {
-      setOrigin(current);
-      setDistance(0);
+      const current = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      };
+
+      if (!origin) {
+        setOrigin(current);
+        setDistance(0);
+        return {
+          distance: 0,
+          detected30: false,
+          completed50: false,
+          initialized: true,
+          error: null,
+        };
+      }
+
+      const meters = distanceMeters(origin, current);
+      setDistance(meters);
+
       return {
-        distance: 0,
+        distance: meters,
+        detected30: meters > 30,
+        completed50: meters >= 50,
+        initialized: false,
+        error: null,
+      };
+    } catch (error: any) {
+      return {
+        distance: origin ? distance : 0,
         detected30: false,
         completed50: false,
-        initialized: true,
+        initialized: false,
+        error: error?.message || "No se pudo obtener ubicación",
       };
     }
-
-    const meters = distanceMeters(origin, current);
-    setDistance(meters);
-
-    return {
-      distance: meters,
-      detected30: meters > 30,
-      completed50: meters >= 50,
-      initialized: false,
-    };
   };
 
   return { origin, distance, checkMovement };

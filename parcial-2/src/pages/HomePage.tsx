@@ -95,6 +95,11 @@ const HomePage: React.FC = () => {
     if (id === 2) {
       const movement = await checkMovement();
 
+      if (movement.error) {
+        setEstadoM2(movement.error);
+        return;
+      }
+
       if (movement.initialized) {
         setEstadoM2("Posición inicial guardada. Muévete y vuelve a ejecutar.");
         return;

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
 
 type Mision = {
   id: number;
@@ -13,7 +14,7 @@ type EstadoGuardado = {
   missions: { id: number; completed: boolean }[];
 };
 
-const STORAGE_KEY = "parcial2_estado";
+const STORAGE_PREFIX = "parcial2_estado";
 
 const BASE_MISIONES: Mision[] = [
   {
@@ -39,8 +40,8 @@ const BASE_MISIONES: Mision[] = [
   },
 ];
 
-function cargarEstado(): EstadoGuardado {
-  const raw = localStorage.getItem(STORAGE_KEY);
+function cargarEstado(storageKey: string): EstadoGuardado {
+  const raw = localStorage.getItem(storageKey);
   if (!raw) return { points: 0, missions: [] };
 
   try {
@@ -71,11 +72,22 @@ function construirMisiones(estado: EstadoGuardado): Mision[] {
 }
 
 export function useMisiones() {
-  const estadoInicial = useMemo(() => cargarEstado(), []);
-  const [puntos, setPuntos] = useState<number>(estadoInicial.points);
-  const [misiones, setMisiones] = useState<Mision[]>(
-    construirMisiones(estadoInicial),
+  const { user } = useAuthContext();
+  const storageKey = useMemo(
+    () => `${STORAGE_PREFIX}_${user?.uid ?? "anon"}`,
+    [user?.uid],
   );
+  const [puntos, setPuntos] = useState<number>(0);
+  const [misiones, setMisiones] = useState<Mision[]>(construirMisiones({
+    points: 0,
+    missions: [],
+  }));
+
+  useEffect(() => {
+    const estado = cargarEstado(storageKey);
+    setPuntos(estado.points);
+    setMisiones(construirMisiones(estado));
+  }, [storageKey]);
 
   const completarMision = (id: number) => {
     const mision = misiones.find((m) => m.id === id);
@@ -112,8 +124,8 @@ export function useMisiones() {
       missions: misiones.map((m) => ({ id: m.id, completed: m.completada })),
     };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [puntos, misiones]);
+    localStorage.setItem(storageKey, JSON.stringify(payload));
+  }, [storageKey, puntos, misiones]);
 
   const total = misiones.length;
   const completadas = misiones.filter((m) => m.completada).length;
