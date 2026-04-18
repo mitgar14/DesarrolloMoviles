@@ -7,6 +7,9 @@ import HomePage from "./pages/HomePage";
 import RegistroPage from "./pages/RegistroPage";
 import ResultadosPage from "./pages/ResultadosPage";
 
+import PrivateRoute from "./components/PrivateRoute";
+import { useAuthContext } from "./context/AuthContext";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -39,20 +42,32 @@ import "./theme/variables.css";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/registro" component={RegistroPage} />
-        <Route exact path="/home" component={HomePage} />
-        <Route exact path="/resultados" component={ResultadosPage} />
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const { user } = useAuthContext();
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route
+            exact
+            path="/login"
+            render={() => (user ? <Redirect to="/home" /> : <LoginPage />)}
+          />
+          <Route
+            exact
+            path="/registro"
+            render={() => (user ? <Redirect to="/home" /> : <RegistroPage />)}
+          />
+          <PrivateRoute exact path="/home" component={HomePage} />
+          <PrivateRoute exact path="/resultados" component={ResultadosPage} />
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
