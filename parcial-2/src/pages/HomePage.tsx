@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   IonBadge,
   IonButton,
@@ -15,16 +16,60 @@ import {
 import { useHistory } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { useMisiones } from "../hooks/useMisiones";
+import {
+  notificarFaltaUnaMision,
+  notificarMisionCompletada,
+  prepararNotificaciones,
+} from "../services/notificaciones";
+import { guardarPuntajeUsuario } from "../services/ranking";
 
 const HomePage: React.FC = () => {
   const history = useHistory();
-  const { logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
   const { puntos, misiones, completarMision, completadas, total, progreso } =
     useMisiones();
+
+  useEffect(() => {
+    prepararNotificaciones();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    guardarPuntajeUsuario({
+      uid: user.uid,
+      email: user.email ?? "sin-correo",
+      points: puntos,
+      missions: misiones.map((m) => ({ id: m.id, completed: m.completada })),
+      missionsCompleted: completadas,
+    }).catch(() => {});
+  }, [user, puntos, completadas, misiones]);
 
   const handleCerrarSesion = async () => {
     await logout();
     history.replace("/login");
+  };
+
+  const handleEjecutarMision = async (id: number) => {
+    const resultado = completarMision(id);
+    if (!resultado) return;
+
+    await notificarMisionCompletada();
+
+    const faltantes = resultado.total - resultado.completed;
+    if (faltantes === 1) {
+      await notificarFaltaUnaMision();
+    }
+
+    if (user) {
+      await guardarPuntajeUsuario({
+        uid: user.uid,
+        email: user.email ?? "sin-correo",
+        points: resultado.points,
+        missions: resultado.missions,
+        missionsCompleted: resultado.completed,
+      });
+    }
   };
 
   return (
@@ -60,7 +105,7 @@ const HomePage: React.FC = () => {
               <IonButton
                 slot="end"
                 disabled={mision.completada || !mision.habilitada}
-                onClick={() => completarMision(mision.id)}
+                onClick={() => handleEjecutarMision(mision.id)}
               >
                 Ejecutar
               </IonButton>
