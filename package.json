@@ -1,0 +1,16 @@
+{
+  "name": "practicas-javascript",
+  "version": "1.0.0",
+  "description": "Challenge 10 - HTTP Methods con fetch nativo y Axios",
+  "type": "module",
+  "scripts": {
+    "get": "node 01-get.js",
+    "post": "node 02-post.js",
+    "put": "node 03-put.js",
+    "delete": "node 04-delete.js",
+    "axios": "node 05-axios-crud.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7"
+  }
+}
